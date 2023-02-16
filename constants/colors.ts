@@ -1,4 +1,5 @@
 export const COLORS = {
   ICON_PRIMARY: "#C7D2FE",
   ICON_SECONDARY: "#A5A6A8",
+  DROPDOWN_ARROW: "#7E8083",
 };

@@ -40,7 +40,7 @@ const Modal = (props: Props) => {
         </div>
         <p className="text-sm leading-5 text-secondary">{description}</p>
       </div>
-      <div className="flex-1">{children}</div>
+      <div className="flex-1 overflow-hidden">{children}</div>
       <div className="flex items-center justify-between p-5">
         <Button handleOnClick={handleSecondaryButtonClick} variant="secondary">
           {secondaryButtonLabel}
