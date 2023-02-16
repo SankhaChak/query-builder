@@ -2,6 +2,7 @@ import { createContext, useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { INITIAL_RULE, INITIAL_RULE_GROUP } from "@/constants";
 import { RuleGroup } from "@/types/ruleGroup";
+import { RuleKeys } from "@/types/rule";
 
 type QueryProviderProps = {
   children: React.ReactNode;
@@ -16,6 +17,12 @@ type QueryContextType = {
     ruleGroupConjunction: RuleGroup["conjunction"]
   ) => void;
   handleAddRule: (ruleGroupId: string) => void;
+  handleUpdateRuleData: (
+    ruleKey: RuleKeys,
+    updatedValue: string,
+    ruleId: string,
+    ruleGroupId: string
+  ) => void;
 };
 
 export const QueryContext = createContext<QueryContextType>(
@@ -26,7 +33,7 @@ export const QueryProvider = (props: QueryProviderProps) => {
   const { children } = props;
 
   const [ruleGroups, setRuleGroups] = useState<RuleGroup[]>([
-    INITIAL_RULE_GROUP,
+    { ...INITIAL_RULE_GROUP },
   ]);
 
   const handleAddRuleGroup = useCallback(() => {
@@ -58,31 +65,43 @@ export const QueryProvider = (props: QueryProviderProps) => {
     []
   );
 
-  const handleAddRule = useCallback(
-    (ruleGroupId: string) => {
-      const newRule = {
-        ...INITIAL_RULE,
-        id: uuidv4(),
-      };
+  const handleAddRule = useCallback((ruleGroupId: string) => {
+    const newRule = {
+      ...INITIAL_RULE,
+      id: uuidv4(),
+    };
 
+    setRuleGroups((ruleGroups) => {
       const newRuleGroups = [...ruleGroups];
       const ruleGroupIndex = newRuleGroups.findIndex(
         (ruleGroup) => ruleGroup.id === ruleGroupId
       );
       newRuleGroups[ruleGroupIndex].children.push(newRule);
+      return newRuleGroups;
+    });
+  }, []);
 
-      setRuleGroups(newRuleGroups);
-
-      // setRuleGroups((ruleGroups) => {
-      //   const newRuleGroups = [...ruleGroups];
-      //   const ruleGroupIndex = newRuleGroups.findIndex(
-      //     (ruleGroup) => ruleGroup.id === ruleGroupId
-      //   );
-      //   newRuleGroups[ruleGroupIndex].children.push(newRule);
-      //   return newRuleGroups;
-      // });
+  const handleUpdateRuleData = useCallback(
+    (
+      ruleKey: RuleKeys,
+      updatedValue: string,
+      ruleId: string,
+      ruleGroupId: string
+    ) => {
+      setRuleGroups((prevRuleGroups) => {
+        const newRuleGroups = [...prevRuleGroups];
+        const ruleGroupIndex = newRuleGroups.findIndex(
+          (ruleGroup) => ruleGroup.id === ruleGroupId
+        );
+        const ruleIndex = newRuleGroups[ruleGroupIndex].children.findIndex(
+          (rule) => rule.id === ruleId
+        );
+        newRuleGroups[ruleGroupIndex].children[ruleIndex][ruleKey] =
+          updatedValue as any;
+        return newRuleGroups;
+      });
     },
-    [ruleGroups]
+    []
   );
 
   const providerValue: QueryContextType = {
@@ -91,6 +110,7 @@ export const QueryProvider = (props: QueryProviderProps) => {
     handleRemoveRuleGroup,
     handleChangeRuleGroupConjunction,
     handleAddRule,
+    handleUpdateRuleData,
   };
 
   return (

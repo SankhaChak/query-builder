@@ -1,5 +1,6 @@
-import clsx from "clsx";
 import { Fragment, useCallback, useMemo, useState } from "react";
+import clsx from "clsx";
+import { RuleKeys } from "@/types/rule";
 import ChevronDownIcon from "../icons/ChevronDown";
 
 type DropdownOptions = {
@@ -11,22 +12,22 @@ type DropdownOptions = {
 }[];
 
 type Props = {
-  label: string;
-  value: string | undefined;
+  label: RuleKeys;
+  selectedOption: { label: string; value: string } | undefined;
   placeholder: string;
   // TODO: Make these mandatory
   options?: DropdownOptions;
-  handleSelect?: (value: string) => void;
+  handleSelect: (fieldName: RuleKeys, value: string) => void;
 };
 
 const Dropdown = (props: Props) => {
-  const { label, placeholder, value, options, handleSelect } = props;
+  const { label, placeholder, selectedOption, options, handleSelect } = props;
 
   const [areOptionsVisible, setAreOptionsVisible] = useState(false);
 
   const displayValue = useMemo(
-    () => placeholder || value,
-    [placeholder, value]
+    () => selectedOption?.label || placeholder,
+    [placeholder, selectedOption]
   );
 
   const handleOptionsVisibility = useCallback(() => {
@@ -34,18 +35,18 @@ const Dropdown = (props: Props) => {
   }, []);
 
   const handleSelectOption = useCallback(
-    (value: string) => {
-      handleSelect?.(value);
+    (updatedValue: string) => {
+      handleSelect(label, updatedValue);
       setAreOptionsVisible(false);
     },
-    [handleSelect]
+    [label, handleSelect]
   );
 
   return (
     <div className="relative flex flex-col gap-2">
       <label
         onClick={handleOptionsVisibility}
-        className="w-min text-xs font-medium leading-5 text-primary"
+        className="w-min text-xs font-medium capitalize leading-5 text-primary"
         tabIndex={0}
       >
         {label}
@@ -55,13 +56,13 @@ const Dropdown = (props: Props) => {
         onClick={handleOptionsVisibility}
         className={clsx(
           "flex w-60 items-center justify-between rounded border border-primary-card-border bg-primary py-2 px-3",
-          value ? "bg-opacity-5" : "bg-opacity-10"
+          selectedOption ? "bg-opacity-5" : "bg-opacity-10"
         )}
       >
         <span
           className={clsx(
             "text-sm font-medium text-primary",
-            !value && "text-opacity-50"
+            !selectedOption && "text-opacity-50"
           )}
         >
           {displayValue}

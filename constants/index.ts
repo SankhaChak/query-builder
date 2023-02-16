@@ -9,7 +9,7 @@ export const INITIAL_RULE: Rule = {
 
 export const INITIAL_RULE_GROUP: RuleGroup = {
   id: uuidv4(),
-  children: [INITIAL_RULE],
+  children: [{ ...INITIAL_RULE }],
   conjunction: "AND",
   not: false,
   type: "rule_group",

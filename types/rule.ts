@@ -51,6 +51,12 @@ export type Criteria =
   | ReasonCriteria
   | LanguageCriteria;
 
+export enum RuleKeys {
+  FIELD = "field",
+  CONDITION = "condition",
+  CRITERIA = "criteria",
+}
+
 export interface Rule {
   id: string;
   field?: RuleField;
