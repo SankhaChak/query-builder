@@ -7,7 +7,8 @@ import RuleGroup from "./RuleGroup";
 type Props = {};
 
 const QueryBuilderModal = (props: Props) => {
-  const { ruleGroups, handleAddRuleGroup } = useContext(QueryContext);
+  const { ruleGroups, handleAddRuleGroup, handleShowFinalQuery } =
+    useContext(QueryContext);
 
   return (
     <Modal
@@ -15,6 +16,7 @@ const QueryBuilderModal = (props: Props) => {
       description="The query you build will be saved in your active view"
       primaryButtonLabel="Finish"
       secondaryButtonLabel="Back"
+      handlePrimaryButtonClick={handleShowFinalQuery}
     >
       <div className="flex h-full flex-col justify-end py-9 px-7">
         <div className="flex max-h-full flex-col items-start overflow-y-auto">

@@ -23,6 +23,7 @@ type QueryContextType = {
     ruleId: string,
     ruleGroupId: string
   ) => void;
+  handleShowFinalQuery: () => void;
 };
 
 export const QueryContext = createContext<QueryContextType>(
@@ -116,6 +117,10 @@ export const QueryProvider = (props: QueryProviderProps) => {
     []
   );
 
+  const handleShowFinalQuery = useCallback(() => {
+    console.log(ruleGroups);
+  }, [ruleGroups]);
+
   const providerValue: QueryContextType = {
     ruleGroups,
     handleAddRuleGroup,
@@ -123,6 +128,7 @@ export const QueryProvider = (props: QueryProviderProps) => {
     handleAddRule,
     handleRemoveRule,
     handleUpdateRuleData,
+    handleShowFinalQuery,
   };
 
   return (

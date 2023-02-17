@@ -18,14 +18,6 @@ type Props = {
   allowDeletion?: boolean;
 };
 
-type Options = {
-  title: string;
-  options: {
-    label: string;
-    value: string;
-  }[];
-}[];
-
 const Rule = (props: Props) => {
   const { ruleGroupId, ruleId, field, condition, criteria, allowDeletion } =
     props;
@@ -43,32 +35,12 @@ const Rule = (props: Props) => {
     handleRemoveRule(ruleGroupId, ruleId);
   }, [handleRemoveRule, ruleGroupId, ruleId]);
 
-  const getSelectedOption = useCallback((options: Options, value: string) => {
-    const selectedOption = options
-      ?.map((option) => option.options)
-      .flat()
-      .find((option) => option.value === value);
-    return selectedOption;
-  }, []);
-
-  const selectedFieldOption = useMemo(
-    () => getSelectedOption(RULE_FIELD_OPTIONS, field as string),
-    [field, getSelectedOption]
-  );
-
-  const selectedConditionOption = useMemo(
-    () => getSelectedOption(RULE_CONDITION_OPTIONS, condition as string),
-    [condition, getSelectedOption]
-  );
-
-  const selectedCriteriaOption = useMemo(
-    () =>
-      getSelectedOption(
-        RULE_CRITERIA_OPTIONS[field as keyof typeof RULE_CRITERIA_OPTIONS],
-        criteria as string
-      ),
-    [field, criteria, getSelectedOption]
-  );
+  const ruleCriteriaOptions = useMemo(() => {
+    const fieldKey = field?.toLowerCase().split(" ").join("_");
+    return RULE_CRITERIA_OPTIONS[
+      fieldKey as keyof typeof RULE_CRITERIA_OPTIONS
+    ];
+  }, [field]);
 
   return (
     <div className="flex items-end gap-4">
@@ -76,27 +48,21 @@ const Rule = (props: Props) => {
         label={RuleKeys.FIELD}
         placeholder="Select field"
         options={RULE_FIELD_OPTIONS}
-        selectedOption={selectedFieldOption}
+        selectedOption={field}
         handleSelect={handleChangeRuleFields}
       />
       <Dropdown
         label={RuleKeys.CONDITION}
         placeholder="Select condition"
         options={field ? RULE_CONDITION_OPTIONS : []}
-        selectedOption={selectedConditionOption}
+        selectedOption={condition}
         handleSelect={handleChangeRuleFields}
       />
       <Dropdown
         label={RuleKeys.CRITERIA}
         placeholder="Select criteria"
-        options={
-          field && condition
-            ? RULE_CRITERIA_OPTIONS[
-                selectedFieldOption!.value as keyof typeof RULE_CRITERIA_OPTIONS
-              ]
-            : []
-        }
-        selectedOption={selectedCriteriaOption}
+        options={field && condition ? ruleCriteriaOptions : []}
+        selectedOption={criteria}
         handleSelect={handleChangeRuleFields}
       />
       {allowDeletion && (

@@ -5,18 +5,14 @@ import ChevronDownIcon from "../icons/ChevronDown";
 
 type DropdownOptions = {
   title: string;
-  options: {
-    label: string;
-    value: string;
-  }[];
+  options: string[];
 }[];
 
 type Props = {
   label: RuleKeys;
-  selectedOption: { label: string; value: string } | undefined;
+  selectedOption: string | undefined;
   placeholder: string;
-  // TODO: Make these mandatory
-  options?: DropdownOptions;
+  options: DropdownOptions;
   handleSelect: (fieldName: RuleKeys, value: string) => void;
 };
 
@@ -26,7 +22,7 @@ const Dropdown = (props: Props) => {
   const [areOptionsVisible, setAreOptionsVisible] = useState(false);
 
   const displayValue = useMemo(
-    () => selectedOption?.label || placeholder,
+    () => selectedOption || placeholder,
     [placeholder, selectedOption]
   );
 
@@ -89,12 +85,12 @@ const Dropdown = (props: Props) => {
                 </li>
               )}
               {option.options.map((option) => (
-                <li key={option.value}>
+                <li key={option}>
                   <button
-                    onClick={() => handleSelectOption(option.value)}
+                    onClick={() => handleSelectOption(option)}
                     className="w-full rounded bg-transparent py-1 px-2 text-left text-sm leading-7 text-primary transition-colors duration-300 hover:bg-dropdown-options-background-on-hover"
                   >
-                    {option.label}
+                    {option}
                   </button>
                 </li>
               ))}
