@@ -6,7 +6,7 @@ type Props = {
 };
 
 const ChevronDownIcon = (props: Props) => {
-  const { className, pathFillColor = COLORS.DROPDOWN_ARROW } = props;
+  const { className, pathFillColor = COLORS.ICON_TERTIARY } = props;
 
   return (
     <svg

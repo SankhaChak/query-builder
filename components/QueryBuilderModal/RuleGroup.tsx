@@ -42,7 +42,7 @@ const RuleGroup = (props: Props) => {
         </div>
       )}
       <div className="flex flex-col gap-4">
-        {rules.map((rule) => (
+        {rules.map((rule, index) => (
           <Rule
             key={rule.id}
             ruleGroupId={ruleGroupId}
@@ -50,6 +50,7 @@ const RuleGroup = (props: Props) => {
             field={rule.field}
             condition={rule.condition}
             criteria={rule.criteria}
+            allowDeletion={index !== 0}
           />
         ))}
       </div>

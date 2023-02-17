@@ -11,12 +11,12 @@ type QueryProviderProps = {
 type QueryContextType = {
   ruleGroups: RuleGroup[];
   handleAddRuleGroup: () => void;
-  handleRemoveRuleGroup: (ruleGroupId: string) => void;
   handleChangeRuleGroupConjunction: (
     ruleGroupId: string,
     ruleGroupConjunction: RuleGroup["conjunction"]
   ) => void;
   handleAddRule: (ruleGroupId: string) => void;
+  handleRemoveRule: (ruleGroupId: string, ruleId: string) => void;
   handleUpdateRuleData: (
     ruleKey: RuleKeys,
     updatedValue: string,
@@ -43,12 +43,6 @@ export const QueryProvider = (props: QueryProviderProps) => {
       children: [{ ...INITIAL_RULE, id: uuidv4() }],
     };
     setRuleGroups((prevRuleGroups) => [...prevRuleGroups, newRuleGroup]);
-  }, []);
-
-  const handleRemoveRuleGroup = useCallback((ruleGroupId: string) => {
-    setRuleGroups((prevRuleGroups) =>
-      prevRuleGroups.filter((ruleGroup) => ruleGroup.id !== ruleGroupId)
-    );
   }, []);
 
   const handleChangeRuleGroupConjunction = useCallback(
@@ -81,6 +75,24 @@ export const QueryProvider = (props: QueryProviderProps) => {
     });
   }, []);
 
+  const handleRemoveRule = useCallback(
+    (ruleGroupId: string, ruleId: string) => {
+      setRuleGroups((prevRuleGroups) => {
+        const newRuleGroups = [...prevRuleGroups];
+        const ruleGroup = newRuleGroups.find(
+          (ruleGroup) => ruleGroup.id === ruleGroupId
+        );
+        if (ruleGroup) {
+          ruleGroup.children = ruleGroup.children.filter(
+            (rule) => rule.id !== ruleId
+          );
+        }
+        return newRuleGroups;
+      });
+    },
+    []
+  );
+
   const handleUpdateRuleData = useCallback(
     (
       ruleKey: RuleKeys,
@@ -107,9 +119,9 @@ export const QueryProvider = (props: QueryProviderProps) => {
   const providerValue: QueryContextType = {
     ruleGroups,
     handleAddRuleGroup,
-    handleRemoveRuleGroup,
     handleChangeRuleGroupConjunction,
     handleAddRule,
+    handleRemoveRule,
     handleUpdateRuleData,
   };
 

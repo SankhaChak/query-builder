@@ -7,6 +7,7 @@ import {
 } from "@/constants/dropdownOptions";
 import { Criteria, RuleCondition, RuleField, RuleKeys } from "@/types/rule";
 import Dropdown from "../layout/Dropdown";
+import TrashIcon from "../icons/Trash";
 
 type Props = {
   ruleGroupId: string;
@@ -14,6 +15,7 @@ type Props = {
   field?: RuleField;
   condition?: RuleCondition;
   criteria?: Criteria;
+  allowDeletion?: boolean;
 };
 
 type Options = {
@@ -25,9 +27,10 @@ type Options = {
 }[];
 
 const Rule = (props: Props) => {
-  const { ruleGroupId, ruleId, field, condition, criteria } = props;
+  const { ruleGroupId, ruleId, field, condition, criteria, allowDeletion } =
+    props;
 
-  const { handleUpdateRuleData } = useContext(QueryContext);
+  const { handleUpdateRuleData, handleRemoveRule } = useContext(QueryContext);
 
   const handleChangeRuleFields = useCallback(
     (ruleKey: RuleKeys, value: string) => {
@@ -35,6 +38,10 @@ const Rule = (props: Props) => {
     },
     [handleUpdateRuleData, ruleGroupId, ruleId]
   );
+
+  const handleDeleteRule = useCallback(() => {
+    handleRemoveRule(ruleGroupId, ruleId);
+  }, [handleRemoveRule, ruleGroupId, ruleId]);
 
   const getSelectedOption = useCallback((options: Options, value: string) => {
     const selectedOption = options
@@ -64,7 +71,7 @@ const Rule = (props: Props) => {
   );
 
   return (
-    <div className="flex gap-4">
+    <div className="flex items-end gap-4">
       <Dropdown
         label={RuleKeys.FIELD}
         placeholder="Select field"
@@ -92,6 +99,14 @@ const Rule = (props: Props) => {
         selectedOption={selectedCriteriaOption}
         handleSelect={handleChangeRuleFields}
       />
+      {allowDeletion && (
+        <button
+          onClick={handleDeleteRule}
+          className="rounded bg-primary bg-opacity-10 p-[9px] transition-all duration-300 hover:bg-opacity-20"
+        >
+          <TrashIcon />
+        </button>
+      )}
     </div>
   );
 };
