@@ -1,4 +1,11 @@
-import { Fragment, useCallback, useMemo, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import clsx from "clsx";
 import { RuleKeys } from "@/types/rule";
 import ChevronDownIcon from "../icons/ChevronDown";
@@ -21,6 +28,8 @@ const Dropdown = (props: Props) => {
 
   const [areOptionsVisible, setAreOptionsVisible] = useState(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
   const displayValue = useMemo(
     () => selectedOption || placeholder,
     [placeholder, selectedOption]
@@ -38,8 +47,25 @@ const Dropdown = (props: Props) => {
     [label, handleSelect]
   );
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setAreOptionsVisible(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   return (
-    <div className="relative flex flex-col gap-2">
+    <div className="relative flex flex-col gap-2" ref={dropdownRef}>
       <label
         onClick={handleOptionsVisibility}
         className="w-min text-xs font-medium capitalize leading-5 text-primary"
