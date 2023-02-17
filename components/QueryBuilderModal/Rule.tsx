@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useContext, useEffect, useMemo } from "react";
 import { QueryContext } from "@/context/QueryContext";
 import {
   RULE_CONDITION_OPTIONS,
@@ -41,6 +41,11 @@ const Rule = (props: Props) => {
       fieldKey as keyof typeof RULE_CRITERIA_OPTIONS
     ];
   }, [field]);
+
+  useEffect(() => {
+    handleChangeRuleFields(RuleKeys.CONDITION, "");
+    handleChangeRuleFields(RuleKeys.CRITERIA, "");
+  }, [field, handleChangeRuleFields]);
 
   return (
     <div className="flex items-end gap-4">
