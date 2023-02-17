@@ -118,6 +118,7 @@ export const QueryProvider = (props: QueryProviderProps) => {
   );
 
   const handleShowFinalQuery = useCallback(() => {
+    alert("Please check console for the Rule Object");
     console.log(ruleGroups);
   }, [ruleGroups]);
 

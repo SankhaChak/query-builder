@@ -5,7 +5,7 @@ import {
   RULE_CRITERIA_OPTIONS,
   RULE_FIELD_OPTIONS,
 } from "@/constants/dropdownOptions";
-import { Criteria, RuleCondition, RuleField, RuleKeys } from "@/types/rule";
+import { RuleCondition, RuleField, RuleKeys } from "@/types/rule";
 import Dropdown from "../layout/Dropdown";
 import TrashIcon from "../icons/Trash";
 
@@ -14,7 +14,7 @@ type Props = {
   ruleId: string;
   field?: RuleField;
   condition?: RuleCondition;
-  criteria?: Criteria;
+  criteria?: string;
   allowDeletion?: boolean;
 };
 

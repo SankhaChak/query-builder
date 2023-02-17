@@ -1,5 +1,6 @@
 import { QueryContext } from "@/context/QueryContext";
-import { useContext } from "react";
+import { parseRuleGroups } from "@/utils/parser";
+import { useContext, useMemo } from "react";
 import Button from "../layout/Button";
 import Modal from "../layout/Modal";
 import RuleGroup from "./RuleGroup";
@@ -10,10 +11,17 @@ const QueryBuilderModal = (props: Props) => {
   const { ruleGroups, handleAddRuleGroup, handleShowFinalQuery } =
     useContext(QueryContext);
 
+  const query = parseRuleGroups(ruleGroups);
+
+  const isValidQuery = useMemo(() => query?.length > 0, [query]);
+
   return (
     <Modal
-      title="Create tag and query"
+      title={isValidQuery ? "Build your query" : "Create tag and query"}
       description="The query you build will be saved in your active view"
+      showResultBox={isValidQuery}
+      resultBoxTitle="Query"
+      result={query}
       primaryButtonLabel="Finish"
       secondaryButtonLabel="Back"
       handlePrimaryButtonClick={handleShowFinalQuery}
